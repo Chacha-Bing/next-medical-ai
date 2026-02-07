@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@douyinfe/semi-icons": "^2.91.0",
+    "@douyinfe/semi-ui": "^2.91.0",
+    "@prisma/client": "6.19.2",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -20,6 +23,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "prisma": "^6.0.0",
     "typescript": "^5"
   }
 }

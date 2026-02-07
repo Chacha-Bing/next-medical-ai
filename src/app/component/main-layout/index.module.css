@@ -1,0 +1,10 @@
+.common {
+  height: 64px;
+  line-height: 64px;
+  background: var(--semi-color-fill-0);
+}
+
+.footer {
+  text-align: center;
+  color: #94a3b8;
+}

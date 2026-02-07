@@ -1,0 +1,49 @@
+// 1. 数据源配置：告诉 Prisma 你用的是 MySQL
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL") // 这会自动读取你的 .env 文件
+}
+
+// 2. 生成器：用于生成 TypeScript 的类型定义
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 3. 用户表
+model User {
+  id        String   @id @default(cuid())
+  userName  String   @unique
+  password  String   // 存储 Hash 后的密码
+  avatarUrl String?  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chats     Chat[]   // 一个用户可以有多个会话
+}
+
+// 4. 会话表（侧边栏显示的条目）
+model Chat {
+  id        String   @id // 这里不写 @default，因为我们要从前端传 UUID 进来
+  title     String?  // 可以是用户第一句话的简缩版
+  userId    String
+  user      User     @relation(fields: [userId], references: id)
+
+  messages  Message[] // 一个会话包含多条消息
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId]) // 为外键加上索引，提升查询性能
+}
+
+// 5. 消息表（每一句具体的对话）
+model Message {
+  id        String   @id @default(cuid())
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: id, onDelete: Cascade)
+  
+  role      String   // 'user' 或 'assistant'
+  content   String   @db.Text // 使用 Text 类型，防止长对话溢出
+  createdAt DateTime @default(now())
+
+  @@index([chatId]) // 为外键加上索引
+}
