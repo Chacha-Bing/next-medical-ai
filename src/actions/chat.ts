@@ -17,9 +17,9 @@ export async function creatChatItemAndFlash({ chatId, title }: { chatId: string;
   }
 }
 
-export async function appendMessageItemAndFlash({ chatId, role, content }: { chatId: string; role: Role; content: string }) {
+export async function appendMessageItemAndFlash({ chatId, role, content, refresh = true }: { chatId: string; role: Role; content: string, refresh?: boolean }) {
   const res = await appendMessageItem({ chatId, role, content });
-  if (res.success) {
+  if (res.success && refresh) {
     revalidatePath(`/chat/${chatId}`);
   }
 }

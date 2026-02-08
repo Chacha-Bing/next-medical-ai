@@ -19,7 +19,6 @@ export default async function RootLayout({
   const session = await auth();
   const chatHistroyRes = await findChatHistroy({ userId: session?.user?.id || 'unknown_user' });
   const chatHistroy = chatHistroyRes.success && chatHistroyRes.data ? chatHistroyRes.data : [];
-  console.log('Session in HeaderDetails:', session, session?.user?.id || 'unknown_user', chatHistroyRes, chatHistroy);
   return (
     <html lang="en">
       <body>

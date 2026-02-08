@@ -1,36 +1,15 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 简介
+这是一个基于 [Next.js](https://nextjs.org) 框架搭建的模型对话前端页面
 
-## Getting Started
+数据库使用 MySQL，模型使用我自己训练的[医疗大模型（小模型）](https://github.com/Chacha-Bing/med_model_learning)，并且使用 python 来调用模型接口服务
 
-First, run the development server:
+![alt text](image.png)
+![alt text](image-1.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 关联项目
+med_model_learning：https://github.com/Chacha-Bing/med_model_learning
+训练模型的输出文章记录：https://juejin.cn/post/7602789520035512330
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Todo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+在路径 `src/app/chat/[id]/chatWrapper.tsx` 中存在一个幽灵消息的问题，应该是因为在流式输出完毕后，页面会重新从数据库拉取历史消息，但是这个短短的时间内，addOptimisticMessage 的副作用并没有结束，所以它继续append了一个用户消息，导致了上面那个不正常的UI渲染结果，需要后续抽时间去研究这个”幽灵bug“
