@@ -4,6 +4,7 @@ import MainLayout from "@/app/component/main-layout";
 import { ChatProvider } from "@/context/chat";
 import { Providers } from "@/app/component/providers";
 import { auth } from "@/auth";
+import { findChatHistroy } from "@/actions/sql";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  console.log('Session in HeaderDetails:', session);
+  const chatHistroyRes = await findChatHistroy({ userId: session?.user?.id || 'unknown_user' });
+  const chatHistroy = chatHistroyRes.success && chatHistroyRes.data ? chatHistroyRes.data : [];
+  console.log('Session in HeaderDetails:', session, session?.user?.id || 'unknown_user', chatHistroyRes, chatHistroy);
   return (
     <html lang="en">
       <body>
@@ -24,7 +27,7 @@ export default async function RootLayout({
           session?.user ? (
             <Providers session={session}>
               <ChatProvider>
-                <MainLayout>
+                <MainLayout chatHistroy={chatHistroy}>
                   {children}
                 </MainLayout>
               </ChatProvider>

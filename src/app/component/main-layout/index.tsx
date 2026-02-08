@@ -5,15 +5,16 @@ import { Layout, Button } from '@douyinfe/semi-ui'; // 假设你之后要用 Nav
 import SliderDetail from '../sider-detail';
 import styles from './index.module.css';
 import { useSession, signOut } from "next-auth/react";
+import { chatHistroyType } from '@/types';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function MainLayout({ children, chatHistroy }: { children: React.ReactNode, chatHistroy: chatHistroyType }) {
   const { data: session } = useSession();
   return (
     <Layout className="components-layout-demo" style={{ minHeight: '100vh' }}>
       <Sider style={{ width: '300px', background: 'var(--semi-color-fill-2)' }}>
-        <SliderDetail />
+        <SliderDetail chatHistroy={chatHistroy}/>
       </Sider>
       <Layout>
         <Header className={`${styles.common} ${styles.header}`}>

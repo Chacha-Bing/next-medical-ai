@@ -23,6 +23,7 @@ export default function ChatBox() {
     setPendingMessage(content);
     const id = createHash();
     router.push(`/chat/${id}`);
+    // revalidatePath("/"); // 直接调用这个函数会导致死循环，因为它会让当前页面重新渲染，而当前页面的 useEffect 又会被触发;正确的做法是让主页在创建新对话后去调用 revalidatePath("/")
   };
 
   return (

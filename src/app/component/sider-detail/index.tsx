@@ -6,26 +6,21 @@ import { ItemKey } from '@douyinfe/semi-ui/lib/es/navigation';
 import { IconArticle, IconPlusCircle } from '@douyinfe/semi-icons';
 import SliderAvatar from "@/public/avatar.jpg"
 import styles from './index.module.css';
+import { chatHistroyType } from '@/types';
 
 const itemKeyEnum = {
   new: 'new',
   chat: 'chat',
 };
 
-export default function SliderDetail() {
+export default function SliderDetail({ chatHistroy }: { chatHistroy: chatHistroyType }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const mockChatHistoryData = [
-    {
-      text: '关于感冒的咨询',
-      itemKey: '111',
-    },
-    {
-      text: '头痛的咨询',
-      itemKey: '222',
-    },
-  ];
+  const chatHistoryData = chatHistroy?.length ? chatHistroy.map(chat => ({
+    text: chat.title || '无标题对话',
+    itemKey: chat.id,
+  })) : [];
 
   // 现在我们采用了 React compiler, 所以不再需要用诸如 useMemo 来优化性能了，直接计算即可
   const selectedKeys = (() => {
@@ -59,7 +54,7 @@ export default function SliderDetail() {
             text: '对话记录',
             icon: <IconArticle />,
             itemKey: itemKeyEnum.chat,
-            items: mockChatHistoryData,
+            items: chatHistoryData,
           },
         ]}
         defaultOpenKeys={[itemKeyEnum.chat]}
@@ -75,7 +70,7 @@ export default function SliderDetail() {
         footer={{
           collapseButton: true,
         }}
-      onClick={handleSelect}
+        onClick={handleSelect}
       />
     </div>
   );
