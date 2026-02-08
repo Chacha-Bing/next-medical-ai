@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import MainLayout from "@/app/component/main-layout";
+import MainLayout from "@/app/(component)/main-layout";
 import { ChatProvider } from "@/context/chat";
-import { Providers } from "@/app/component/providers";
+import { Providers } from "@/app/(component)/providers";
 import { auth } from "@/auth";
 import { findChatHistroy } from "@/actions/sql";
 

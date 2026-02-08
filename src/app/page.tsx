@@ -1,50 +1,10 @@
-"use client";
+import PageWrapper from './pageWrapper';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './page.module.css';
-import { useChat } from '@/context/chat';
-
-export default function ChatBox() {
-  const [prompt, setPrompt] = useState('');
-  const router = useRouter();
-  const { setPendingMessage } = useChat();
-
-  const createHash = () => {
-    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-      return crypto.randomUUID().replaceAll('-', '').slice(0, 12);
-    }
-    return Math.random().toString(16).slice(2, 14);
-  };
-
-  const handleSend = () => {
-    const content = prompt.trim();
-    if (!content) return;
-    setPendingMessage(content);
-    const id = createHash();
-    router.push(`/chat/${id}`);
-    // revalidatePath("/"); // 直接调用这个函数会导致死循环，因为它会让当前页面重新渲染，而当前页面的 useEffect 又会被触发;正确的做法是让主页在创建新对话后去调用 revalidatePath("/")
-  };
+// 主页的主要功能是提供一个输入框，让用户输入医疗问题，并在用户提交后创建一个新的对话（chat），然后跳转到对应的对话页面；因此，这个主页本身并不需要做数据获取的工作，所有的逻辑都可以放在 PageWrapper 组件里实现
+// 如果后续会有获取数据的功能，或者需要在服务端渲染时就获取数据，那么再把数据获取的逻辑放在这个 Page 组件里实现，并通过 props 传递给 PageWrapper；但目前来看，PageWrapper 里已经没有什么需要服务端渲染的内容了，所以就直接让 PageWrapper 来处理所有的逻辑吧
+export default async function Page() {
 
   return (
-    <div className={styles.page}>
-      <div className={styles.centerCard}>
-        <h1 className={styles.title}>医疗 AI 问答</h1>
-        <p className={styles.subtitle}>请输入您的医疗问题，立即开始咨询</p>
-        <div className={styles.inputRow}>
-          <input
-            className={styles.input}
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="请输入医疗问题"
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          />
-          <button className={styles.sendButton} onClick={handleSend}>
-            发送
-          </button>
-        </div>
-        <p className={styles.helper}>提示：请避免输入个人隐私信息。</p>
-      </div>
-    </div>
+    <PageWrapper />
   );
 }
