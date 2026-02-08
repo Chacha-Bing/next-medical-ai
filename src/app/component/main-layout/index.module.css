@@ -4,6 +4,46 @@
   background: var(--semi-color-fill-0);
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  letter-spacing: 0.2px;
+}
+
+.greeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #334155;
+}
+
+.userName {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.logoutButton {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.logoutButton:hover {
+  background: #e2e8f0;
+  color: #1f2937;
+}
+
 .footer {
   text-align: center;
   color: #94a3b8;
