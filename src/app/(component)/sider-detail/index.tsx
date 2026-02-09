@@ -43,7 +43,6 @@ export default function SliderDetail({ chatHistroy }: { chatHistroy: chatHistroy
 
       <Nav
         className={styles.nav}
-        bodyStyle={{ height: 320 }}
         items={[
           {
             text: '新对话',

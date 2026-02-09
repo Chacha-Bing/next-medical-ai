@@ -28,6 +28,15 @@ export default function ChatWrapper({ messageHistroyResult }: { success: boolean
   // 2. 增加一个 state 专门处理当前正在流式生成的 AI 回复
   const [streamingAIContent, setStreamingAIContent] = useState("");
 
+  const prevMessageLength = useRef(message.length);
+  useEffect(() => {
+    // 💡 只有当从服务器传回的消息长度增加了，才清空流状态，不然在清空占位AI消息到真正根据据库刷新的消息之间的过渡会有闪烁问题
+    if (message.length > prevMessageLength.current) {
+      setStreamingAIContent("");
+      prevMessageLength.current = message.length;
+    }
+  }, [message.length]);
+
   // 当用户在主页开启新对话时，主页会通过 context 把用户的输入（pendingMessage）传递到这个页面;此时需要默认触发一次 handleSend、且在 chat 表中新增一条数据
   // 如果用户直接访问这个页面（没有 pendingMessage），则展示历史消息
   useEffect(() => {
@@ -47,14 +56,6 @@ export default function ChatWrapper({ messageHistroyResult }: { success: boolean
   }, [optimisticMessages.length, streamingAIContent.length]);
 
   // 这是 streaming 版本的 handleSend，用户消息立即展示，AI 回复边接收边展示
-  // 这里有一个待解决的bug：这么说吧，本来页面上要渲染的数据是：
-  // 1. 用户打完问题，optimisticMessages为[{role: 'user', content: '手术啦'}]
-  // 2. 流式输出时，optimisticMessages不变
-  // 3. 流式输出完毕后，optimisticMessages变为[{role: 'user', content: '手术啦'}, {"role": "assistant","content": "AI输出的内容"}]
-  // 上面这是预期的数据结果，也是正常渲染的结果
-  // 但是实际上，等到流式输出完毕后，我看到页面间有一瞬间渲染出了[{role: 'user', content: '手术啦'}, {"role": "assistant","content": "AI输出的内容"},{role: 'user', content: '手术啦'}]的UI结果，但是最后不知道怎么加上去的{role: 'user', content: '手术啦'}在下一瞬间的UI上又消失了，回到了正常的[{role: 'user', content: '手术啦'}, {"role": "assistant","content": "AI输出的内容"}]渲染的结果
-  // 但是我同时console.log了optimisticMessages变量，但没有发现这个变量有变成过上述不正常渲染时对应的不正常数据
-  // 应该是因为在流式输出完毕后，页面会重新从数据库拉取历史消息，但是这个短短的时间内，addOptimisticMessage 的副作用并没有结束，所以它继续append了一个用户消息，导致了上面那个不正常的UI渲染结果，需要后续抽时间去研究这个”幽灵bug“
   const handleSend = async (content?: string) => {
     const messageToSend = content?.trim() ?? prompt.trim();
     if (!messageToSend) return;
@@ -102,7 +103,6 @@ export default function ChatWrapper({ messageHistroyResult }: { success: boolean
           content: assistantText,
           refresh: true, // 这时触发页面刷新，历史消息里就有了这条 AI 回复
         });
-        setStreamingAIContent("");
 
       } catch (error) {
         console.error("流式调用失败", error);
