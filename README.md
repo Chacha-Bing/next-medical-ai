@@ -3,7 +3,7 @@
 
 数据库使用 MySQL，模型使用我自己训练的[医疗大模型（小模型）](https://github.com/Chacha-Bing/med_model_learning)，并且使用 python 来调用模型接口服务
 
-<video controls src="医疗AI成品效果.mp4" title="Title"></video>
+https://github.com/user-attachments/assets/d428b605-52ab-42c4-9315-356b944a58f9
 
 ## 关联项目
 med_model_learning：https://github.com/Chacha-Bing/med_model_learning
